@@ -36,7 +36,7 @@ class Conexaoi {
         } elseif ($row == TRUE) {
             $row = $this->result->fetch_assoc();
             $this->result->free();
-            //mysqli_free_result($this->result);
+            
             return $row;
         }
         
