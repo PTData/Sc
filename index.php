@@ -24,7 +24,7 @@ $db->printr($rs);
 $db->close();
 
 ## League
-include './Classes/Team.Class.php'
+include './Classes/Team.Class.php';
 $team = new Team();
 $team->players();
 
