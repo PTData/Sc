@@ -1,10 +1,10 @@
 <?php
-
 /**
- * Conexao em MySQLi
- *
- * @author Pedro
- */
+* Conexao em MySQLi
+* next time, try to use Prepare
+ * example on this site: http://www.mustbebuilt.co.uk/php/using-object-oriented-php-with-the-mysqli-extension/
+* @author Pedro
+*/
 class Conexaoi {
     private $db;
     public $result;
@@ -40,13 +40,84 @@ class Conexaoi {
             return $row;
         }
         
-        
         return 0;
         
     }
     
+    public function select_prepare($query, $type) {
+        
+        $stmt = $this->db->prepare($query);
+        //$nome = "%".$team."%";
+        
+        if((int)$type)
+            $stmt->bind_param("i", $type);
+        elseif((string)$type)
+            $stmt->bind_param ("s", $type);
+        else die('definir tipo de parametro');
+        
+        $field_count = $stmt->field_count;
+        $stmt->execute();
+        $stmt->store_result();
+        $array = array();
+        switch ($field_count) {
+            case 1:
+                $stmt->bind_result($a);
+                while ($stmt->fetch()) {
+                    $array[1]= $a;
+                }
+                break;
+            case 2:
+                $stmt->bind_result($a, $b);
+                $numRows = $stmt->num_rows;
+                for($i = 0; $i < $numRows; $i ++) {
+                    while ($stmt->fetch()) {
+                        $array[$numRows]['1'][] = $a;
+                        $array[$numRows]['2'][] = $b;
+                    }
+                }
+                break;
+            case 3:
+                $stmt->bind_result($a, $b, $c);
+                $numRows = $stmt->num_rows;
+                
+                for($i = 0; $i < $numRows; $i ++) {
+                    while ($stmt->fetch()) {
+                        
+                        $array[$numRows]['1'][] = $a;
+                        $array[$numRows]['2'][] = $b;
+                        $array[$numRows]['3'][] = $c;
+                    }
+                }
+                break;
+            case 4:
+                $stmt->bind_result($a, $b, $c, $d);
+                $numRows = $stmt->num_rows;
+                for($i = 0; $i < $numRows; $i ++) {
+                    while ($stmt->fetch()) {
+                        $array[$numRows]['1'][] = $a;
+                        $array[$numRows]['2'][] = $b;
+                        $array[$numRows]['3'][] = $c;
+                        $array[$numRows]['4'][] = $d;
+                    }
+                }
+                break;
+        }
+        //$this->print_stmt($stmt);
+        $stmt->free_result();
+        $stmt->close();
+        return $array;
+    }
+    
     public function number_rows() {
        echo $this->result->num_rows;
+    }
+    
+    public function insert($query) {
+        if(!$this->result = $this->db->query($query)) {
+            die('houve um erro na query [' . $this->db->error. ']');
+        }
+        $this->db->real_query($query);
+        
     }
     
     public function update($query, $show = FALSE) {
@@ -59,7 +130,7 @@ class Conexaoi {
         
     }
     
-    public function printr($var) {
+    private function printr($var) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
@@ -71,6 +142,11 @@ class Conexaoi {
         $this->db->close();
     }
      
+    public function print_stmt($stmt) {
+        echo '<pre>';
+        print_r($stmt);
+        echo '</pre>';	
+    }
 }
 
 ?>
