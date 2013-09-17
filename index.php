@@ -29,5 +29,15 @@ $team = new Team();
 $team->players();
 
 
+## para jogar
+/*
+include './Classes/Jogo.Class.php';
 
+$equipa1 = array('Sacotes', 55);
+$equipa2 = array('Psiqur', 66);
+
+
+$jogo = new Jogo($equipa1, $equipa2);
+$jogo->jogar()
+*/
 ?>
