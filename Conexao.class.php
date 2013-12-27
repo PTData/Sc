@@ -101,6 +101,19 @@ class Conexaoi {
                     }
                 }
                 break;
+            case 5:
+                $stmt->bind_result($a, $b, $c, $d, $e);
+                $numRows = $stmt->num_rows;
+                for($i = 0; $i < $numRows; $i ++) {
+                    while ($stmt->fetch()) {
+                        $array[$numRows]['1'][] = $a;
+                        $array[$numRows]['2'][] = $b;
+                        $array[$numRows]['3'][] = $c;
+                        $array[$numRows]['4'][] = $d;
+                        $array[$numRows]['5'][] = $e;
+                    }
+                }
+                break;
         }
         //$this->print_stmt($stmt);
         $stmt->free_result();
