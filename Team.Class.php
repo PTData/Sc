@@ -34,14 +34,54 @@ class Team {
        return $nome[$array_nome] . ' ' . $apelido[$array_apelido];
     }
     
-    public function players($team) {
+    public function players($team, $table = false) {
         if(!(int) $team) die('tem de ser valor numérico');
-        $query = "Select id_player, name_player, age_player from players where idteam_player = ?";
-        //$query = "Select name_player, age_player, quality_player from players where name_player LIKE= ?";
-        $equipa = $this->db->select_prepare($query, $team);
+        $query = "SELECT   number_player, name_player, age_player, position_player, quality_player FROM players WHERE idteam_player  = ?";
+        $players = $this->db->select_prepare($query, $team);
+        $team_quality = 0;
+        if($table) {
+            $html = '<table> <tr> <td>Numero</td> <td>Nome</td> <td>idade</td> <td>posição</td> <td>Qualidae</td> </tr> ';
+            //var_dump($players);
+            foreach ($players as $t) {
+                $count = count($t[1]);
+                var_dump($t[4][1]);
+                for($i = 0; $i < $count; $i++) {
+                    
+                    $html .= '
+                        <tr>
+                            <td>'.$t[1][$i].'</td>
+                            <td>'.$t[2][$i].'</td>
+                            <td>'.$t[3][$i].'</td>
+                            <td>'.$t[4][$i].'</td> 
+                            <td>'.$t[5][$i].'</td> 
+                        </tr>
+                    ';
+                    
+                }
+                
+            } 
+            $html .= '</table>';
+            echo $html;
+            
+        } else {
+           foreach ($players as $t) {
+                $count = count($t[1]);
+                for($i = 0; $i < $count; $i++) {
+                    echo '<ul>';
+                    echo '<li>'.'nome: '. $t[1][$i]. '</li>';
+                    echo '<li>'.'idade: ' . $t[2][$i]. '</li>';
+                    echo '<li>'.'posicao: ' . $t[3][$i]. '</li>';
+                    echo '<li>'.'qualidade: ' . $t[4][$i]. '</li>';
+                    echo '</ul>';
+                    echo '<div class="clear"></div>';
+                    $team_quality += $t[4][$i];
+                }
+            } 
+        }
+         
         
-        $this->db->close();
-        return $equipa;
+        $this->qualidade = $team_quality;
+        return $players;
     }
     
     public function insert_players($team) {
